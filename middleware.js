@@ -3,13 +3,15 @@
 const passport = require('passport');
 const url = require('url');
 
-const config = require('./config');
+require('module-alias/register');
 
-const errors = require('./libs/errors');
-const logger = require('./libs/logger');
-const { isEmpty } = require('./libs/util');
+const config = require('@/config');
 
-const LogDB = require('./libs/db_client/mongo')(config.logDb.endPoint, config.logDb.database);
+const errors = require('#/libs/errors');
+const logger = require('#/libs/logger');
+const { isEmpty } = require('#/libs/util');
+
+const LogDB = require('#/libs/db_client/mongo')(config.logDb.endPoint, config.logDb.database);
 
 exports.auth = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, result) => {

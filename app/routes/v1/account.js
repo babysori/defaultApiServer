@@ -1,9 +1,11 @@
 'use strict';
 
+require('module-alias/register');
+
 const router = require('express').Router();
-const api = require('../../apis').v1.account;
-const { asyncWrapper } = require('../../../libs/wrapper');
-const { auth } = require('../../../middleware');
+const api = require('@/app/apis').v1.account;
+const { asyncWrapper } = require('#/libs/wrapper');
+const { auth } = require('@/middleware');
 
 router.post('/', asyncWrapper(api.create));
 router.put('/', asyncWrapper(api.login));

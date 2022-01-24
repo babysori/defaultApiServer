@@ -1,6 +1,8 @@
 'use strict';
 
-const UserService = require('../../../services/user');
+require('module-alias/register');
+
+const UserService = require('#/services/user');
 
 exports.get = async (req, res) => {
   const { owner } = req;

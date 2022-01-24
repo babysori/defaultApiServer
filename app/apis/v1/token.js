@@ -1,11 +1,13 @@
 'use strict';
 
+require('module-alias/register');
+
 const jwt = require('jsonwebtoken');
 const { ExtractJwt } = require('passport-jwt');
 
-const errors = require('../../../libs/errors');
+const errors = require('#/libs/errors');
 
-const TokenService = require('../../../services/token');
+const TokenService = require('#/services/token');
 
 exports.refresh = async (req, res) => {
   let { access_token, refresh_token } = req.cookies;

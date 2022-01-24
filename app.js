@@ -3,11 +3,13 @@
 const cluster = require('cluster');
 const os = require('os');
 
-const config = require('./config');
-const logger = require('./libs/logger');
-const { sequelize } = require('./db/sequelize_model');
-// const dynamodb = require('./db/dynamodb_schema');
-const { getDateString } = require('./libs/util');
+require('module-alias/register');
+
+const config = require('@/config');
+const logger = require('#/libs/logger');
+const { sequelize } = require('#/db/sequelize_model');
+// const dynamodb = require('#/db/dynamodb_schema');
+const { getDateString } = require('#/libs/util');
 
 const count = os.cpus().length;
 

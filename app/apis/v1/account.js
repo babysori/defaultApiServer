@@ -1,14 +1,16 @@
 'use strict';
 
-const errors = require('../../../libs/errors');
-const { transaction } = require('../../../db/sequelize');
+require('module-alias/register');
 
-const TokenService = require('../../../services/token');
-const AccountService = require('../../../services/account');
-const UserService = require('../../../services/user');
+const errors = require('#/libs/errors');
+const { transaction } = require('#/db/sequelize');
 
-const { UniqueId } = require('../../../libs/util');
-const { AccountType } = require('../../../libs/constants');
+const TokenService = require('#/services/token');
+const AccountService = require('#/services/account');
+const UserService = require('#/services/user');
+
+const { UniqueId } = require('#/libs/util');
+const { AccountType } = require('#/libs/constants');
 
 async function verify(type, id, socialIdToken, socialAccessToken) {
   switch (type) {

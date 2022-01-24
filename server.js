@@ -6,10 +6,12 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const passport = require('passport');
 
-const config = require('./config');
-const logger = require('./libs/logger');
-const middleware = require('./middleware');
-const { sequelize } = require('./db/sequelize_model');
+require('module-alias/register');
+
+const config = require('@/config');
+const logger = require('#/libs/logger');
+const middleware = require('@/middleware');
+const { sequelize } = require('#/db/sequelize_model');
 // const dynamodb = require('./db/dynamodb_schema');
 // require('./db/mongoose_model');
 
@@ -27,6 +29,7 @@ app.use(bodyParser.json({ limit: '10mb' }));
 app.use(methodOverride());
 
 require('./passport');
+
 app.use(passport.initialize());
 
 app.enable('trust proxy');
