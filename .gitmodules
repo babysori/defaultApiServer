@@ -1,0 +1,3 @@
+[submodule "defaultApiSubModule"]
+	path = defaultApiSubModule
+	url = https://github.com/babysori/defaultApiSubModule.git
