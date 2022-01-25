@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const passport = require('passport');
+const cors = require('cors');
 
 require('module-alias/register');
 
@@ -22,6 +23,18 @@ if (process.mainModule.filename.endsWith('server.js') && config.makeTable) {
 
 const app = express();
 const port = process.env.PORT || 4000;
+
+const origin = ['http://localhost:4000'];
+
+config.origins.forEach((o) => {
+  origin.push(o);
+});
+
+app.use(cors({
+  origin,
+  optionSuccessStatus: 200,
+  credentials: true,
+}));
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
