@@ -3,7 +3,7 @@ info:
   description: "Default APIs"
   version: "0.9.0"
   title: "Default API SWAGGER"
-  contract: "babysori@gamil.com"
+  contract: "babysori@gamail.com"
 basePath: "/v1"
 tags:
   - name: "account"
@@ -28,8 +28,9 @@ paths:
             properties:
               type:
                 type: "string"
-                description: "계정 타입. default: email"
+                description: "계정 타입. default: username"
                 enum:
+                  - "username"
                   - "email"
                   - "google"
                   - "apple"
@@ -69,8 +70,9 @@ paths:
             properties:
               type:
                 type: "string"
-                description: "계정 타입. default: email"
+                description: "계정 타입. default: username"
                 enum:
+                  - "username"
                   - "email"
                   - "google"
                   - "apple"

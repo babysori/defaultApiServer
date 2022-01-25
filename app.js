@@ -8,7 +8,7 @@ require('module-alias/register');
 const config = require('@/config');
 const logger = require('#/libs/logger');
 const { sequelize } = require('#/db/sequelize_model');
-// const dynamodb = require('#/db/dynamodb_schema');
+const dynamodb = require('#/db/dynamodb_schema');
 const { getDateString } = require('#/libs/util');
 
 const count = os.cpus().length;
@@ -29,7 +29,7 @@ function spawn() {
 if (config.clustering === true && cluster.isMaster) {
   if (config.makeTable) {
     sequelize.sync();
-    // dynamodb.sync();
+    dynamodb.sync();
   }
 
   for (let i = 0; i < count; i += 1) spawn();
@@ -42,7 +42,7 @@ if (config.clustering === true && cluster.isMaster) {
 } else {
   if (config.makeTable) {
     sequelize.sync();
-    // dynamodb.sync();
+    dynamodb.sync();
   }
 
   require('./server'); // eslint-disable-line global-require

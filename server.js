@@ -14,12 +14,12 @@ const config = require('@/config');
 const logger = require('#/libs/logger');
 const middleware = require('@/middleware');
 const { sequelize } = require('#/db/sequelize_model');
-// const dynamodb = require('./db/dynamodb_schema');
+const dynamodb = require('#/db/dynamodb_schema');
 // require('./db/mongoose_model');
 
 if (process.mainModule.filename.endsWith('server.js') && config.makeTable) {
   sequelize.sync();
-  // dynamodb.sync();
+  dynamodb.sync();
 }
 
 const app = express();

@@ -2,8 +2,10 @@
 
 require('module-alias/register');
 
+const config = require('@/config');
 const errors = require('#/libs/errors');
-const { transaction } = require('#/db/sequelize');
+// for MySQL
+// const { transaction } = require('#/db/sequelize');
 
 const TokenService = require('#/services/token');
 const AccountService = require('#/services/account');
@@ -46,9 +48,11 @@ async function verify(type, id, socialIdToken, socialAccessToken) {
 }
 
 exports.create = async (req, res) => {
+  const { body } = req;
   const {
-    type, id, password, name, nickname, socialIdToken, socialAccessToken,
-  } = req.body;
+    type = AccountType.USERNAME, id, password, name, nickname, socialIdToken, socialAccessToken,
+  } = body;
+  const result = {};
 
   if ((type === AccountType.USERNAME || type === AccountType.EMAIL) && !password) {
     throw new errors.InvalidInputError('no password');
@@ -61,30 +65,58 @@ exports.create = async (req, res) => {
 
   const owner = UniqueId();
 
-  await transaction(async (t) => {
-    await Promise.all([
-      AccountService.createObject({
-        type, id, password, owner,
-      }, t),
-      UserService.createObject({ owner, name, nickname }, t),
-    ]);
-  });
+  // for MySQL
+  // await transaction(async (t) => {
+  //   await Promise.all([
+  //     AccountService.createObject({
+  //       type, id, password, owner,
+  //     }, t),
+  //     UserService.createObject({
+  //       owner, name, nickname, isTest: config.isQA,
+  //     }, t),
+  //   ]);
+  // });
+  // for DynamoDB
+  await Promise.all([
+    AccountService.createObject({
+      type, id, password, owner,
+    }),
+    UserService.createObject({
+      owner, name, nickname, isTest: config.isQA,
+    }),
+  ]);
 
-  if (type !== AccountType.EMAIL) {
-    const accessToken = TokenService.createAccessToken({ owner, name, nickname });
+  if (type === AccountType.EMAIL) {
+    // TODO: authorization Email 발송
+  } else {
+    const accessToken = TokenService.createAccessToken({
+      account: { type },
+      user: {
+        owner, name, nickname, isTest: config.isQA,
+      },
+    });
     const refreshToken = await TokenService.createRefreshToken(owner);
 
+    // for Web
     TokenService.setTokenCookie(res, accessToken, refreshToken);
+
+    // for App
+    // result.access_token = accessToken;
+    // result.refresh_token = refreshToken;
   }
 
   res.send({
     code: 0,
-    result: {},
+    result,
   });
 };
 
+// TODO: Authorization API 추가해야함.
+
 exports.login = async (req, res) => {
-  const { type, id, password } = req.body;
+  const { body } = req;
+  const { type = AccountType.USERNAME, id, password } = body;
+  const result = {};
 
   const account = await AccountService.getObject(type, id);
   const { owner } = account;
@@ -100,11 +132,16 @@ exports.login = async (req, res) => {
   const accessToken = TokenService.createAccessToken({ owner, name, nickname });
   const refreshToken = await TokenService.createRefreshToken(owner);
 
+  // for Web
   TokenService.setTokenCookie(res, accessToken, refreshToken);
+
+  // for App
+  // result.access_token = accessToken;
+  // result.refresh_token = refreshToken;
 
   res.send({
     code: 0,
-    result: {},
+    result,
   });
 };
 
@@ -112,12 +149,12 @@ exports.change = async (req, res) => {
   const { owner, body, params } = req;
   const { type, id } = params;
   const {
-    password, auth,
+    password,
   } = body;
 
-  const account = await AccountService.getObject(type, id, false);
+  const account = await AccountService.getObject(type, id);
   if (account.owner !== owner) throw new errors.InvalidInputError();
-  await AccountService.changeObject(account, { password, auth });
+  await AccountService.changeObject(account, { password });
 
   res.send({
     code: 0,
@@ -136,12 +173,18 @@ exports.delete = async (req, res) => {
   user.accounts = JSON.stringify(accounts);
 
   // 관련 정보 삭제 및 account.quit 및 user.quit 등록
-  await transaction(async (t) => {
-    await Promise.all([
-      AccountService.removeAllObjectsByOwner(owner, accounts, t),
-      UserService.removeObject(user, t),
-    ]);
-  });
+  // for MySQL
+  // await transaction(async (t) => {
+  //   await Promise.all([
+  //     AccountService.removeAllObjectsByOwner(owner, accounts, t),
+  //     UserService.removeObject(user, t),
+  //   ]);
+  // });
+  // for DynamoDB
+  await Promise.all([
+    AccountService.removeAllObjectsByOwner(owner, accounts),
+    UserService.removeObject(user),
+  ]);
 
   res.clearCookie('access_token');
   res.send({
