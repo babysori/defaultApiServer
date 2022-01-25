@@ -7,15 +7,18 @@ const config = require('#/config');
 const { env } = process;
 const raw = {
   common: {
+    origins: [],
   },
 
   develop: {
   },
 
   test: {
+    origins: ['test.domain'],
   },
 
   production: {
+    origins: ['prod.domain'],
   },
 };
 
