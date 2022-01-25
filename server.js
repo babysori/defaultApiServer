@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const passport = require('passport');
 const cors = require('cors');
+const yaml = require('yamljs');
 
 require('module-alias/register');
 
@@ -49,6 +50,12 @@ app.enable('trust proxy');
 
 app.use(middleware.clientIp);
 app.use(middleware.logBase);
+
+if (config.isTest) {
+  const swaggerUi = require('swagger-ui-express'); // eslint-disable-line global-require
+  const swaggerDocument = yaml.load('./swagger.yaml');
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+}
 
 require('./app/routes')(app);
 
