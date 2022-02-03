@@ -10,6 +10,8 @@ tags:
     description: "계정관리"
   - name: "token"
     description: "토큰관리"
+  - name: "user"
+    description: "유저 정보관리"
 paths:
   /account:
     post:
@@ -83,6 +85,100 @@ paths:
               id:
                 type: "string"
                 description: "로그인할 계정의 ID"
+                required: true
+              password:
+                type: "string"
+                description: "비밀번호. email 타입일 경우에만 입력."
+              socialIdToken:
+                type: "string"
+                description: "google 타입 계정만 필요함."
+              socialAccessToken:
+                type: "string"
+                description: "Social 계정만 필요함."
+      responses:
+        "200":
+          descrption: "성공"
+    delete:
+      tags:
+        - "account"
+      summary: "계정 탈퇴"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          descrption: "성공"
+
+  /account/{type}/{id}:
+    patch:
+      tags:
+        - "account"
+      summary: "계정 수정"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "type"
+          type: "string"
+          description: "계정 타입"
+          enum:
+            - "username"
+            - "email"
+            - "google"
+            - "apple"
+            - "fb"
+            - "kakao"
+            - "naver"
+            - "line"
+          required: true
+        - in: "path"
+          name: "id"
+          type: "string"
+          description: "계정 ID"
+          required: true
+        - in: "body"
+          name: "body"
+          description: "수정할 계정의 정보를 입력한다."
+          required: true
+          schema:
+            type: "object"
+            properties:
+              password:
+                type: "string"
+                description: "비밀번호. email 타입일 경우에만 입력."
+      responses:
+        "200":
+          descrption: "성공"
+
+  /account/link:
+    post:
+      tags:
+        - "account"
+      summary: "계정 연결"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "기존의 계정에 새로운 계정을 연결한다."
+          required: true
+          schema:
+            type: "object"
+            properties:
+              type:
+                type: "string"
+                description: "계정 타입. default: username"
+                enum:
+                  - "username"
+                  - "email"
+                  - "google"
+                  - "apple"
+                  - "fb"
+                  - "kakao"
+                  - "naver"
+                  - "line"
+              id:
+                type: "string"
+                description: "생성할 계정의 ID"
                 required: true
               password:
                 type: "string"
