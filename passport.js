@@ -22,7 +22,8 @@ passport.use(new JwtStrategy({
   // issuer: 'defaultserver.com',
   // audience: 'defaultserver.com',
 }, (jwt_payload, done) => {
-  const { owner } = jwt_payload;
+  const { account, user } = jwt_payload;
+  const { owner } = user;
 
-  return done(null, { owner });
+  return done(null, { account, user, owner });
 }));

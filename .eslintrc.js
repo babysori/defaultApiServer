@@ -5,7 +5,7 @@ module.exports = {
       alias: {
         map: [
           ['@', './'],
-          ['#', './defaultApiSubModule/'],
+          ['#', './subModule/'],
         ],
       },
     },
