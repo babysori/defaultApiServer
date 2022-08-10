@@ -13,12 +13,13 @@ require('module-alias/register');
 const config = require('@/config');
 const logger = require('#/libs/logger');
 const middleware = require('@/middleware');
-const { sequelize } = require('#/db/sequelize_model');
+// for MySQL
+// const { sequelize } = require('#/db/sequelize_model');
+// for DynamoDB
 const dynamodb = require('#/db/dynamodb_schema');
-// require('./db/mongoose_model');
 
 if (process.mainModule.filename.endsWith('server.js') && config.makeTable) {
-  sequelize.sync();
+  // sequelize.sync();
   dynamodb.sync();
 }
 

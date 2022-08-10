@@ -2,7 +2,7 @@
 
 require('module-alias/register');
 
-const constants = require('#/libs/constants');
+const constants = require('#/constants');
 
 const raw = {
 };

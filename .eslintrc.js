@@ -30,5 +30,6 @@ module.exports = {
     'import/no-dynamic-require': 0,
     'no-console': 0,
     'import/no-extraneous-dependencies': 0,
+    'no-underscore-dangle': 0,
   },
 };

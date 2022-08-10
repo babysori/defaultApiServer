@@ -2,7 +2,9 @@
   "name": "defaultapiserver",
   "version": "0.0.0",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "start": "node app.js"
+  },
   "_moduleAliases": {
     "@": ".",
     "#": "./subModule"

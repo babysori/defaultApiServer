@@ -1,24 +1,25 @@
 version: 0.2
 env:
   variables:
-    GIT_URL: "babysori@github.com:babysori/defaultApiServer.git"
+    GIT_URL: "git@github.com:babysori/defaultApiServer.git"
   parameter-store:
     SSH_KEY: git_key
-    SSH_PUB: git_pub
     JWT_KEY: jwt_key
     JWT_PUB: jwt_pub
 
 phases:
   install:
     commands:
-      - mkdir -p ~/.ssh
-      - echo "$SSH_KEY" > ~/.ssh/id_rsa
-      - echo "$SSH_PUB" > ~/.ssh/id_rsa.pub
-      - mkdir .keys
+      - mkdir -p ~/.ssh .keys
       - echo "$JWT_KEY" > .keys/jwtrs256.key
       - echo "$JWT_PUB" > .keys/jwtrs256.key.pub
-      - chmod 600 ~/.ssh/id_rsa .keys/jwtrs256.key
+      - echo "$SSH_KEY" > ~/.ssh/id_rsa
+      - wget https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
+      - mv rds-combined-ca-bundle.pem .keys/
+      - chmod 600 ~/.ssh/id_rsa
       - eval "$(ssh-agent -s)"
+      - ssh-add ~/.ssh/id_rsa
+      - git config --global url."git@github.com:".insteadOf "https://github.com/"
       - git init
       - git remote add origin "$GIT_URL"
       - git fetch origin
