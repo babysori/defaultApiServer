@@ -11,7 +11,7 @@ const errors = require('#/libs/errors');
 const logger = require('#/libs/logger');
 const { isEmpty } = require('#/libs/util');
 
-const LogDB = require('#/libs/db_client/mongo')(config.logDb.endPoint, config.logDb.database);
+const LogDB = require('#/libs/db_client/mongo')(config.logDb);
 
 exports.auth = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, result) => {

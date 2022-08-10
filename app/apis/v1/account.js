@@ -12,7 +12,7 @@ const AccountService = require('#/services/account');
 const UserService = require('#/services/user');
 
 const { UniqueId } = require('#/libs/util');
-const { AccountType } = require('#/libs/constants');
+const { AccountType } = require('#/constants');
 
 async function verify(type, id, socialIdToken, socialAccessToken) {
   switch (type) {
